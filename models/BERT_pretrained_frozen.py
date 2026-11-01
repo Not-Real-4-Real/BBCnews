@@ -1,12 +1,9 @@
-
 import torch
 import torch.nn as nn
 
 from transformers import BertModel
 
-
 PRETRAINED_MODEL_NAME = "bert-base-uncased"
-
 
 class FrozenBERT(nn.Module):
 

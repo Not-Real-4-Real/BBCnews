@@ -47,14 +47,14 @@ train_loader, valid_loader, test_loader, train_eval_loader = (
         batch_size=16,
         eval_batch_size=32,
         seed=42,
-        max_length=512,
+        max_length=128,
     )
 )
 
 
 # ---- 4. Model ----
 
-model = FrozenBERT(
+model = TinyBERT(
     num_classes=len(LABEL2ID)
 ).to(device)
 
@@ -76,17 +76,18 @@ print(f"Trainable parameters: {trainable_params:,}")
 
 criterion = nn.CrossEntropyLoss()
 
-# optimizer = optim.AdamW(
-#     model.parameters(),
-#     lr=LEARNING_RATE,
-#     weight_decay=WEIGHT_DECAY,
-# )
-
 optimizer = optim.AdamW(
-    (p for p in model.parameters() if p.requires_grad),
-    lr=1e-3,
-    weight_decay=0.01,
+    model.parameters(),
+    lr=LEARNING_RATE,
+    weight_decay=WEIGHT_DECAY,
 )
+
+# Tested for frozen BERT
+# optimizer = optim.AdamW(
+#     (p for p in model.parameters() if p.requires_grad),
+#     lr=1e-3,
+#     weight_decay=0.01,
+# )
 
 scheduler = optim.lr_scheduler.CosineAnnealingLR(
     optimizer,
